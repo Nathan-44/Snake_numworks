@@ -51,6 +51,14 @@ impl Color565 {
 
         (r, g, b)
     }
+
+    /// Create a new Color565 object from a u16 formated as a RGB 565 value.
+    #[inline]
+    pub const fn from_u16(c: u16) -> Self {
+        Color565 {
+            value: c,
+        }
+    }
 }
 
 /// A rectangle on the screen defined by its top left corner coordinates and its size.

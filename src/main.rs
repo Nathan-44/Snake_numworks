@@ -4,55 +4,56 @@
 #[macro_use]
 mod nadk;
 
-use crate::nadk::display::{Color565, SCREEN_RECT, ScreenPoint, draw_string, push_rect_uniform};
-use crate::nadk::keyboard::{Key, wait_until_pressed};
-use crate::nadk::storage::{CalculatorModel, get_calculator_model};
-use crate::nadk::utils::wait_ok_released;
-
 // The app name must be a C string and the app name size must include the end line NULL character
-configure_app!(b"SampleApp\0", 10, "../target/icon.nwi", 745);
+configure_app!(b"Snake\0", 6, "../target/icon.nwi", 3107);
 
 // Setup the heap allocator if you need one
 setup_allocator!();
+
+#[cfg(not(target_os = "none"))]
+extern crate alloc;
+
+mod game;
+mod apple;
+mod common;
+mod grid;
+mod save;
+mod snake_body;
+
+use nadk::keyboard::KeyboardState;
 
 #[unsafe(no_mangle)]
 fn main() {
     // You must call setup_allocator!() before
     init_heap!();
-    wait_ok_released();
 
-    // Your code here
+     // === Main loop
 
-    push_rect_uniform(SCREEN_RECT, Color565::from_rgb888(255, 255, 255));
-    draw_string(
-        "Exact same codebase.",
-        ScreenPoint::new(20, 20),
-        true,
-        Color565::from_rgb888(0, 0, 0),
-        Color565::new(255, 255, 255),
-    );
-    match get_calculator_model() {
-        CalculatorModel::Upsilon => draw_string(
-            "Hello from Upsilon!",
-            ScreenPoint::new(20, 50),
-            true,
-            Color565::from_rgb888(0, 0, 0),
-            Color565::new(255, 255, 255),
-        ),
-        CalculatorModel::Simulator => draw_string(
-            "Hello from the simulator!",
-            ScreenPoint::new(20, 50),
-            true,
-            Color565::from_rgb888(0, 0, 0),
-            Color565::new(255, 255, 255),
-        ),
-        _ => draw_string(
-            "Hello from Epsilon!",
-            ScreenPoint::new(20, 50),
-            true,
-            Color565::from_rgb888(0, 0, 0),
-            Color565::new(255, 255, 255),
-        ),
-    };
-    wait_until_pressed(Key::Ok);
+    // Keyboard state from the previous frame, used to compute just-pressed keys.
+    let mut prev = KeyboardState::scan();
+
+    // Application main loop flag. Set to false to exit.
+    let mut running = true;
+
+    // Init game
+    let mut snake_game = game::Game::new();
+
+    while running {
+        // Scan the current keyboard state.
+        let now = KeyboardState::scan();
+
+        let just = now.get_just_pressed(prev);
+
+        // Update game state
+        running = snake_game.update(just);
+
+        // Wait for the vertical blank
+        nadk::display::wait_for_vblank();
+
+        // Draw game
+        snake_game.draw();
+
+        // Save the current keyboard state for just-pressed detection next frame.
+        prev = now;
+    }
 }
