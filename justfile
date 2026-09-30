@@ -1,5 +1,5 @@
-app_name := "SampleApp"
-lib_file_name := "libsample_app"
+app_name := "Snake"
+lib_file_name := "libsnake"
 
 icon_file := "assets/icon.png"
 

@@ -1,11 +1,11 @@
 [package]
-name = "Rust-epsilon-dev-template"
+name = "Snake"
 version = "0.1.0"
 edition = "2024"
 build = "build/build.rs"
 
 [[bin]]
-name = "SampleApp"
+name = "Snake"
 path = "src/main.rs"
 test = false
 doctest = false
@@ -17,7 +17,7 @@ test = false
 doctest = false
 bench = false
 crate-type = ["cdylib"]
-name = "sample_app"
+name = "snake"
 
 [features]
 default = ["upsilon"]
