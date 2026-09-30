@@ -1,0 +1,47 @@
+[package]
+name = "Rust-epsilon-dev-template"
+version = "0.1.0"
+edition = "2024"
+build = "build/build.rs"
+
+[[bin]]
+name = "SampleApp"
+path = "src/main.rs"
+test = false
+doctest = false
+bench = false
+
+[lib]
+path = "src/main.rs"
+test = false
+doctest = false
+bench = false
+crate-type = ["cdylib"]
+name = "sample_app"
+
+[features]
+default = ["upsilon"]
+upsilon = []
+epsilon = []
+
+[profile.dev]
+panic="abort"
+strip=true
+opt-level= "z"
+lto = true
+codegen-units = 1
+
+[profile.release]
+panic="abort"
+strip = true
+opt-level = 3
+lto = true
+codegen-units = 1
+
+[dependencies]
+cortex-m = {version = "0.7.7", features=["critical-section-single-core"]}
+embedded-alloc = "0.6.0"
+enum-iterator = "2.3.0"
+
+[build-dependencies]
+cc = "1.2.46"
