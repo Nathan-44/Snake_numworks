@@ -224,7 +224,7 @@ impl Snake {
 
     // Init death animation and return time to wait
     pub fn init_death_animation(&mut self, time_death: u32) -> u32 {
-        self.death_step = 1;
+        self.death_step = 0;
         
         (time_death as f64 / self.length as f64) as u32
     }
