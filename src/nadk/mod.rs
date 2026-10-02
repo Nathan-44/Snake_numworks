@@ -29,3 +29,6 @@ pub mod storage;
 
 /// Provide some random useful functions.
 pub mod utils;
+
+/// Provide support for image under a special format
+pub mod image;

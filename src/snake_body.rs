@@ -24,11 +24,11 @@ impl SnakePart {
         self.x as u16 == x && self.y as u16 == y
     }
 
-    fn coos_u16(&self) -> (u16, u16) {
+    fn coords_u16(&self) -> (u16, u16) {
         (self.x as u16, self.y as u16)
     }
 
-    fn coos_i16(&self) -> (i16, i16) {
+    fn coords_i16(&self) -> (i16, i16) {
         (self.x, self.y)
     }
 
@@ -101,7 +101,7 @@ impl Snake {
     /// Getter to the last part's coos
     pub fn last_part_coos(&self) -> (u16, u16) {
         let index = (self.length - 1) as usize;
-        self.body[index].unwrap().coos_u16()
+        self.body[index].unwrap().coords_u16()
     }
 
     /// Add a snake's part
@@ -111,7 +111,7 @@ impl Snake {
 
         let old_last = &self.body[index_old_last];
 
-        let (old_x, old_y) = old_last.unwrap().coos_u16();
+        let (old_x, old_y) = old_last.unwrap().coords_u16();
 
         self.body[index_last] = Some(SnakePart { 
             x: old_x as i16, 
@@ -123,13 +123,13 @@ impl Snake {
 
     pub fn move_snake(&mut self) -> bool{
         // We take the coos of the head to put them on the next part
-        let (mut old_x, mut old_y) = self.body[0].unwrap().coos_i16();
+        let (mut old_x, mut old_y) = self.body[0].unwrap().coords_i16();
 
         // Move the head
         self.body[0].as_mut().unwrap().move_part(&self.direction);
 
         // Check if the head is in a normal position
-        let (mut new_x, mut new_y) = self.body[0].unwrap().coos_i16();
+        let (mut new_x, mut new_y) = self.body[0].unwrap().coords_i16();
         if new_x < 0 || new_x > 9 || new_y < 0 || new_y > 9 {
             // We replace the head to draw
             self.body[0] = Some(
@@ -145,13 +145,13 @@ impl Snake {
         for part_index in 1..self.length {
             let index = part_index as usize;
 
-            (new_x, new_y) = self.body[index].unwrap().coos_i16();
+            (new_x, new_y) = self.body[index].unwrap().coords_i16();
             self.body[index].as_mut().unwrap().move_part_to(old_x, old_y);
             (old_x, old_y) = (new_x, new_y);
         }
 
         // Check if the head is in the body
-        let (x, y) = self.body[0].unwrap().coos_u16();
+        let (x, y) = self.body[0].unwrap().coords_u16();
         if self.in_snake_without_head(x, y) {
             return false;
         }

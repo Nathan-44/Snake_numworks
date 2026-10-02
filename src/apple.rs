@@ -25,12 +25,12 @@ impl Apple {
         (x, y)
     }
     pub fn draw(&self) {
-        let (x, y) = self.coos();
+        let (x, y) = self.coords();
         let square = common::square(x, y);
 
         push_rect_uniform(square, nadk::display::COLOR_RED);
     }
-    pub fn coos(&self) -> (u16, u16) {
+    pub fn coords(&self) -> (u16, u16) {
         (self.x, self.y)
     }
 }

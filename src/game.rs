@@ -257,7 +257,7 @@ impl Game {
                 }
 
                 // If the head is on the apple
-                let (x_apple, y_apple) = self.apple.coos();
+                let (x_apple, y_apple) = self.apple.coords();
                 if self.player.in_head(x_apple, y_apple) {
                     self.player.add_part();
                     self.score += 1;

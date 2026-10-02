@@ -6,6 +6,8 @@ use std::ffi::CString;
 
 use core::ffi::c_char;
 
+pub const SCREEN_WIDTH: u16 = 320;
+pub const SCREEN_HEIGHT: u16 = 240;
 pub const SCREEN_RECT: ScreenRect = ScreenRect {
     x: 0,
     y: 0,
