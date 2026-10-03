@@ -13,6 +13,13 @@ pub enum NumImageFormat {
     Simple = 0,
 }
 
+pub enum ImageOrientation {
+    Up,
+    Down,
+    Left,
+    Right,
+}
+
 /// Struct who manage images
 pub struct Image<'a> {
     format: NumImageFormat,
@@ -57,40 +64,127 @@ impl Image <'_>{
         }
     }
 
-    pub fn draw(&self, x: u16, y: u16) {
+    pub fn draw(&self, point: ScreenPoint, orientation: ImageOrientation) {
         match self.format {
-            NumImageFormat::Simple => self.draw_simple(x, y),
+            NumImageFormat::Simple => self.draw_simple(point, orientation),
         }
     }
 
     /// Draw for simple format
-    fn draw_simple(&self, x_d: u16, y_d: u16) {
+    fn draw_simple(&self, point: ScreenPoint, orientation: ImageOrientation) {
         // Define mutable variables for coords
-        let (mut x, mut y) = (x_d, y_d);
+        let (mut x, mut y) = (point.x, point.y);
 
-        for pix in self.data[self.offset..].chunks_exact(3) {
-            // We get color and flag
-            let color = u16::from_le_bytes([pix[0], pix[1]]);
-            let flag = pix[2];
+        // Define iterator
+        match orientation {
+            ImageOrientation::Left => {
+                let iterator = self.data[self.offset..].chunks_exact(3);
+                for pix in iterator {
+                    // We get color and flag
+                    let color = u16::from_le_bytes([pix[0], pix[1]]);
+                    let flag = pix[2];
 
-            // We draw the pixel
-            if flag != Flags::Transparent as u8 {
-                let pixel = ScreenRect::new(x, y, 1, 1);
+                    // We draw the pixel
+                    if flag != Flags::Transparent as u8 {
+                        let pixel = ScreenRect::new(x, y, 1, 1);
 
-                push_rect_uniform(pixel, Color565::from_u16(color));
-            }
+                        push_rect_uniform(pixel, Color565::from_u16(color));
+                    }
 
-            // We update coords and we check values
-            x += 1;
-            if x >= self.width + x_d {
-                x = x_d;
-                y += 1;
-            }
+                    // We update coords and we check values
+                    x += 1;
+                    if x >= self.width + point.x {
+                        x = point.x;
+                        y += 1;
+                    }
 
-            if x > display::SCREEN_WIDTH || y > display::SCREEN_HEIGHT {
-                break;
+                    if x > display::SCREEN_WIDTH || y > display::SCREEN_HEIGHT {
+                        break;
+                    }
+                }
+            },
+            ImageOrientation::Right => {
+                let iterator = self.data[self.offset..].chunks_exact(3).rev();
+                for pix in iterator {
+                    // We get color and flag
+                    let color = u16::from_le_bytes([pix[0], pix[1]]);
+                    let flag = pix[2];
+
+                    // We draw the pixel
+                    if flag != Flags::Transparent as u8 {
+                        let pixel = ScreenRect::new(x, y, 1, 1);
+
+                        push_rect_uniform(pixel, Color565::from_u16(color));
+                    }
+
+                    // We update coords and we check values
+                    x += 1;
+                    if x >= self.width + point.x {
+                        x = point.x;
+                        y += 1;
+                    }
+
+                    if x > display::SCREEN_WIDTH || y > display::SCREEN_HEIGHT {
+                        break;
+                    }
+                }
+            },
+            ImageOrientation::Up => {
+                let iterator = self.data[self.offset..].chunks_exact(3).rev();
+                for pix in iterator {
+                    // We get color and flag
+                    let color = u16::from_le_bytes([pix[0], pix[1]]);
+                    let flag = pix[2];
+
+                    // We draw the pixel
+                    if flag != Flags::Transparent as u8 {
+                        let pixel = ScreenRect::new(x, y, 1, 1);
+
+                        push_rect_uniform(pixel, Color565::from_u16(color));
+                    }
+
+                    // We update coords and we check values
+                    y += 1;
+                    if y >= self.height + point.y {
+                        y = point.y;
+                        x += 1;
+                    }
+
+                    if x > display::SCREEN_WIDTH || y > display::SCREEN_HEIGHT {
+                        break;
+                    }
+                }
+            },
+            ImageOrientation::Down => {
+                let iterator = self.data[self.offset..].chunks_exact(3);
+                for pix in iterator {
+                    // We get color and flag
+                    let color = u16::from_le_bytes([pix[0], pix[1]]);
+                    let flag = pix[2];
+
+                    // We draw the pixel
+                    if flag != Flags::Transparent as u8 {
+                        let pixel = ScreenRect::new(x, y, 1, 1);
+
+                        push_rect_uniform(pixel, Color565::from_u16(color));
+                    }
+
+                    // We update coords and we check values
+                    y += 1;
+                    if y >= self.height + point.y {
+                        y = point.y;
+                        x += 1;
+                    }
+
+                    if x > display::SCREEN_WIDTH || y > display::SCREEN_HEIGHT {
+                        break;
+                    }
+                }
             }
         }
+        
+
+        
     }
 }
 

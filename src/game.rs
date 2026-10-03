@@ -69,7 +69,7 @@ impl Game {
             time: 0,
             actual_game_speed: 2, // Medium game speed
             state: GameState::Begin,
-            temp_direction: Directions::EST, // Avoid bugs between 2 move
+            temp_direction: Directions::EAST, // Avoid bugs between 2 move
             timer: 0,
             best_score: 0,
             tiny_timer: 0,
@@ -127,7 +127,7 @@ impl Game {
                 Color565::from_rgb888(46,111,64)
         );
 
-        self.temp_direction = Directions::EST;
+        self.temp_direction = Directions::EAST;
         self.time = 0;
     }
 
@@ -232,7 +232,7 @@ impl Game {
                     self.temp_direction = Directions::WEST;
                 } 
                 else if just.key_down(Key::Right) || just.key_down(Key::Six) {
-                    self.temp_direction = Directions::EST;
+                    self.temp_direction = Directions::EAST;
                 }
 
                 // Calculate time

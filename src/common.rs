@@ -1,5 +1,5 @@
-use crate::nadk::display::ScreenRect as Rect;
-use crate::nadk::display;
+use crate::nadk::display::{ScreenPoint, ScreenRect as Rect};
+use crate::nadk::{display, image};
 
 // Screen dimension : 320x240
 pub const GRID_X: u16 = 100;
@@ -17,4 +17,13 @@ pub fn square(x: u16, y: u16) -> Rect{
     }
 }
 
+pub fn square_point(x: u16, y: u16) -> ScreenPoint {
+    ScreenPoint { 
+        x: (x * SQUARE_WIDTH) + GRID_X, 
+        y: (y * SQUARE_HEIGHT) + GRID_Y,
+    }
+}
+
 pub const BG_COLOR: display::Color565 = display::Color565::from_rgb888(21, 34, 56);
+
+pub static IMAGE_HEAD_LEFT: image::Image<'_> = image::Image::new(include_bytes!("../assets/tete.png.nat"));

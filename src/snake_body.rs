@@ -1,6 +1,6 @@
 //! Manage the snake itself
 
-use crate::nadk::display::push_rect_uniform;
+use crate::nadk::display::{ScreenPoint, push_rect_uniform};
 use crate::nadk::display;
 
 use crate::common;
@@ -35,7 +35,7 @@ impl SnakePart {
     // Move part without check
     fn move_part(&mut self, direction: &Directions) {
         match direction {
-            Directions::EST => self.x += 1,
+            Directions::EAST => self.x += 1,
             Directions::NORTH => self.y -= 1,
             Directions::SOUTH => self.y += 1,
             Directions::WEST => self.x -= 1,
@@ -46,13 +46,17 @@ impl SnakePart {
         self.x = x;
         self.y = y;
     }
+
+    fn get_point(&self) -> ScreenPoint {
+        common::square_point(self.x as u16, self.y as u16)
+    }
 }
 
 #[derive(Clone, Copy)]
 /// Directions of the snbake
 pub enum Directions {
     NORTH,
-    EST,
+    EAST,
     WEST,
     SOUTH,
 }
@@ -71,7 +75,7 @@ impl Snake {
     pub fn new(color1: display::Color565, color_head: display::Color565) -> Self {
         let mut snke = Self {
             body: [None; 100],
-            direction: Directions::EST,
+            direction: Directions::EAST,
             length: 3,
             color1: color1,
             color_head: color_head,
@@ -88,7 +92,14 @@ impl Snake {
 
     pub fn draw(&self) {
         // We draw the head
-        self.body[0].unwrap().draw(self.color_head);
+        // self.body[0].unwrap().draw(self.color_head);
+        let point = self.body[0].unwrap().get_point();
+        match self.direction {
+            Directions::EAST => common::IMAGE_HEAD_LEFT.draw(point, crate::nadk::image::ImageOrientation::Left),
+            Directions::NORTH => common::IMAGE_HEAD_LEFT.draw(point, crate::nadk::image::ImageOrientation::Up),
+            Directions::SOUTH => common::IMAGE_HEAD_LEFT.draw(point, crate::nadk::image::ImageOrientation::Down),
+            Directions::WEST => common::IMAGE_HEAD_LEFT.draw(point, crate::nadk::image::ImageOrientation::Right),
+        };
 
         for part in &self.body[1..] {
             if let Some(snake_part) = part {
@@ -164,7 +175,7 @@ impl Snake {
         let new_direction_n: i8;
 
         match direction {
-            Directions::EST => new_direction_n = -1,
+            Directions::EAST => new_direction_n = -1,
             Directions::NORTH => new_direction_n = -2,
             Directions::SOUTH => new_direction_n = 2,
             Directions::WEST => new_direction_n = 1,
@@ -173,7 +184,7 @@ impl Snake {
         let old_direction_n: i8;
 
         match self.direction {
-            Directions::EST => old_direction_n = -1,
+            Directions::EAST => old_direction_n = -1,
             Directions::NORTH => old_direction_n = -2,
             Directions::SOUTH => old_direction_n = 2,
             Directions::WEST => old_direction_n = 1,
