@@ -1,6 +1,6 @@
 //! Manage the snake itself
 
-use crate::nadk::display::{ScreenPoint, push_rect_uniform};
+use crate::nadk::display::push_rect_uniform;
 use crate::nadk::display;
 
 use crate::common;
@@ -46,10 +46,6 @@ impl SnakePart {
         self.x = x;
         self.y = y;
     }
-
-    fn get_point(&self) -> ScreenPoint {
-        common::square_point(self.x as u16, self.y as u16)
-    }
 }
 
 #[derive(Clone, Copy)]
@@ -92,14 +88,7 @@ impl Snake {
 
     pub fn draw(&self) {
         // We draw the head
-        // self.body[0].unwrap().draw(self.color_head);
-        let point = self.body[0].unwrap().get_point();
-        match self.direction {
-            Directions::EAST => common::IMAGE_HEAD_LEFT.draw(point, crate::nadk::image::ImageOrientation::Left),
-            Directions::NORTH => common::IMAGE_HEAD_LEFT.draw(point, crate::nadk::image::ImageOrientation::Up),
-            Directions::SOUTH => common::IMAGE_HEAD_LEFT.draw(point, crate::nadk::image::ImageOrientation::Down),
-            Directions::WEST => common::IMAGE_HEAD_LEFT.draw(point, crate::nadk::image::ImageOrientation::Right),
-        };
+        self.body[0].unwrap().draw(self.color_head);
 
         for part in &self.body[1..] {
             if let Some(snake_part) = part {
