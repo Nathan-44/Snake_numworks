@@ -44,8 +44,6 @@ git clone https://github.com/Nathan-44/Snake_numworks.git
 cd Snake_numworks
 ```
 
-Start Docker: `./docker.sh start`
-
 On Debian-based distribution : `bash ./setup.sh`.
 <br>
 On other linux distribution : More information [here](https://github.com/yannis300307/NumworksAppsRust/).
